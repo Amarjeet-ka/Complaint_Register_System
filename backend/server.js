@@ -1,15 +1,26 @@
-const connectdatabase = require('../backend/config/database.js');
 const express = require("express");
+require('dotenv').config();
+
 const app = express();
-connectdatabase;
-app.get("/",function(res,req){
-    res.send('Complaint Register Server');
-})
+const connectDatabase = require('./config/database');
+const RegisterRoutes = require('./routes/registrationRoutes.js');
+const CheckRoutes = require('./routes/checkUser');
+// Connect to the database
+connectDatabase;
 
+// Middleware
+app.use(express.json());
 
+// Register routes
+app.use('/api', RegisterRoutes);
+app.use('/api1',CheckRoutes);
+// Root endpoint
+app.get("/", (req, res) => {
+  res.send('Complaint Register Server');
+});
 
-const PORT = 6000;
+const PORT = process.env.REACT_APP_PORT;
 
-app.listen(PORT,function(){
-    console.log('\x1b[35m%s\x1b[0m',`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
